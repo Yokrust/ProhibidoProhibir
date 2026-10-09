@@ -6,7 +6,7 @@ export class SoundScore {
     this.playing = false;
     this.voices = new Set();
     this.lastCue = -1;
-    this.cues = [26, 35, 43, 50, 58, 65, 73, 81, 87, 93];
+    this.cues = [27, 36, 45, 54, 62.4, 72, 81.2, 90, 100.3];
   }
   async enable(position, playing) {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -79,11 +79,11 @@ export class SoundScore {
   update(position, pressure) {
     if (!this.enabled || !this.playing || !this.context) return;
     const now = this.context.currentTime;
-    const intensity = position < 24 ? position / 24 : position < 78 ? 0.65 : 0.9;
-    const ending = position > 97 ? Math.max(0, 1 - (position - 97) / 4) : 1;
+    const intensity = position < 26 ? position / 26 : position < 62 ? 0.85 : 0.10;
+    const ending = position > 104 ? Math.max(0, 1 - (position - 104) / 4) : 1;
     this.output.gain.setTargetAtTime(0.7 * ending, now, 0.2);
     this.bedFilter.frequency.setTargetAtTime(250 + intensity * 1100 + pressure * 1600, now, 0.12);
-    this.bedGain.gain.setTargetAtTime(0.12 + intensity * 0.13, now, 0.2);
+    this.bedGain.gain.setTargetAtTime(position < 62 ? 0.12 + intensity * 0.13 : 0.018, now, 0.2);
     for (let i = 0; i < this.drones.length; i++) {
       this.drones[i].detune.setTargetAtTime(Math.sin(position * 0.39 + i) * (8 + intensity * 24), now, 0.15);
     }
@@ -91,7 +91,7 @@ export class SoundScore {
     if (cue > this.lastCue) {
       this.lastCue = cue;
       // Enabling sound halfway through does not replay missed cues.
-      if (position - this.cues[cue] < 0.3) this.scream(cue, position >= 78 ? 2.9 : 2.1);
+      if (position - this.cues[cue] < 0.3) this.scream(cue, position >= 62 ? 1.7 : 2.5);
     }
   }
   scream(index, duration) {

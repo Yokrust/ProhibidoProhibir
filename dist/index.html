@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#050008">
-  <meta name="description" content="Prohibido Prohibir. Una secuencia audiovisual experimental de luz, materia y percepción.">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="Prohibido Prohibir. Luz, desgarro y vacío. Una apertura audiovisual experimental.">
   <title>Prohibido Prohibir</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23050008'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23DFFF00' stroke-width='3'/%3E%3Cpath d='m5 5 22 22' stroke='%23FF71CE' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000000'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23ffffff' stroke-width='3'/%3E%3Cpath d='m5 5 22 22' stroke='%239d1115' stroke-width='4'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./experience.js"></script>
 </head>
@@ -17,17 +17,9 @@
       <video id="eye-film" muted playsinline loop preload="metadata" src="./assets/eye.mp4"></video>
       <video id="scream-film" muted playsinline loop preload="metadata" src="./assets/scream.mp4"></video>
       <video id="apparition-film" muted playsinline loop preload="metadata" src="./assets/apparition.mp4"></video>
-      <div class="film-tint"></div>
     </div>
-    <div class="type-stage" id="type-stage" aria-hidden="true">
-      <span id="word" class="word"></span>
-      <span id="word-echo" class="word word-echo"></span>
-      <span id="word-slice" class="word word-slice"></span>
-    </div>
-    <div class="scratches" aria-hidden="true"></div>
-    <div class="grain" aria-hidden="true"></div>
-    <div class="shutter" id="shutter" aria-hidden="true"></div>
-    <div class="afterimage" id="afterimage" aria-hidden="true"><span>PROHIBIDO</span><em>prohibir</em></div>
+    <div class="type-stage" id="type-stage" aria-hidden="true"></div>
+    <div class="afterimage" id="afterimage" aria-hidden="true"><span>PROHIBIDO</span><span>PROHIBIR</span></div>
     <h1 class="sr-only">Prohibido Prohibir</h1>
     <button class="control pause-control" id="pause" aria-label="Pausar la experiencia" aria-pressed="false" title="Pausar · Escape">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path class="pause-path" d="M8 5v14M16 5v14"/><path class="play-path" d="m9 5 10 7-10 7Z"/></svg>
@@ -36,7 +28,7 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5 5 9H2v6h3l5 4Z"/><path class="sound-wave" d="M14 8c3 2 3 6 0 8M17 4c6 4 6 12 0 16"/><path class="sound-off" d="m15 9 6 6m0-6-6 6"/></svg>
       <span id="sound-label">Sonido</span>
     </button>
-    <p class="notice" id="notice">Luz intensa · sonido opcional</p>
+    <p class="notice" id="notice">Pulsos de luz · sonido opcional</p>
     <button class="continue-control" id="continue" hidden>Continuar</button>
     <button class="replay-control" id="replay" hidden>Repetir</button>
     <div class="progress" aria-hidden="true"><i id="progress-fill"></i></div>
