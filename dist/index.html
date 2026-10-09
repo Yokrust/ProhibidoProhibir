@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#09000e">
+  <meta name="description" content="Prohibido Prohibir. Una apertura experimental de luz, movimiento y tipografía.">
+  <title>Prohibido Prohibir — apertura</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2309000e'/%3E%3Cpath d='M4 26 16 5 28 26M8 19h16' fill='none' stroke='%23DFFF00' stroke-width='4'/%3E%3Cpath d='m5 5 22 22' stroke='%23FF71CE' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <script src="./experience.js" defer></script>
+</head>
+<body>
+  <main class="experience" id="experience" aria-label="Apertura interactiva de Prohibido Prohibir">
+    <div class="light-fallback" aria-hidden="true"></div>
+    <canvas id="light-sea" aria-hidden="true"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="edge-shadow" aria-hidden="true"></div>
+    <header class="topbar">
+      <a class="wordmark" href="./" aria-label="Reiniciar Prohibido Prohibir">PROHIBIDO<br>PROHIBIR</a>
+      <button class="pause-control" id="pause" type="button" aria-pressed="false"><span class="pause-icon" aria-hidden="true"></span><span id="pause-label">Pausar</span></button>
+    </header>
+    <div class="side-copy side-copy-left" aria-hidden="true">EL ORDEN ES UNA ILUSIÓN</div>
+    <div class="side-copy side-copy-right" aria-hidden="true">nada permanece quieto</div>
+    <div class="composition" aria-hidden="true">
+      <div class="orbit orbit-one"><span>NO HAY FORMA CORRECTA</span></div>
+      <div class="orbit orbit-two"><span>DE ESTAR AQUÍ</span></div>
+      <div class="title-layer" id="title-layer">
+        <div class="title-top" data-text="PROHIBIDO">PROHIBIDO</div>
+        <div class="title-bottom" data-text="prohibir">prohibir</div>
+        <div class="title-cut cut-one">PROHIBIDO</div>
+        <div class="title-cut cut-two">prohibir</div>
+      </div>
+      <div class="stamp"><span>TODO SE</span><strong>DESBORDA.</strong></div>
+    </div>
+    <h1 class="sr-only">Prohibido Prohibir</h1>
+    <footer class="bottom-bar">
+      <p class="instructions"><span id="gesture-instruction">Mueve el cursor.</span><br><span>Mantén pulsado para alterar.</span></p>
+      <button class="pressure-control" id="pressure" type="button" aria-label="Alterar la luz. Mantén pulsado o mantén la barra espaciadora.">
+        <svg class="pressure-ring" viewBox="0 0 72 72" aria-hidden="true"><circle class="ring-track" cx="36" cy="36" r="32"/><circle class="ring-fill" cx="36" cy="36" r="32"/></svg>
+        <span class="pressure-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span class="pressure-label" id="pressure-label">MANTÉN PULSADO</span>
+      </button>
+      <p class="keyboard-hint">ESPACIO para alterar<br>ESC para pausar</p>
+    </footer>
+    <div class="cursor" id="cursor" aria-hidden="true"><span></span></div>
+    <p class="sr-only" id="state-description" role="status" aria-live="polite"></p>
+    <noscript><p class="noscript-note">Activa JavaScript para interactuar con la luz.</p></noscript>
+  </main>
+</body>
+</html>
