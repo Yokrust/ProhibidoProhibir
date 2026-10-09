@@ -1,0 +1,10 @@
+Use case: stylized-concept.
+Asset type: original experimental film artwork, a single raster source for three brief animated loops.
+Primary request: Create one landscape black-and-white analog film triptych, approximately 1536x1024 or wider, consisting of exactly three EQUAL-width vertical panels placed edge-to-edge. Each panel occupies precisely one third of the image with no gaps.
+Left third: extreme macro close-up of one anonymous human eye staring directly into the camera lens, harsh grain, organic skin texture, liquid reflections in the eye.
+Center third: anonymous open mouth mid-scream, extreme macro crop of lips and deep dark mouth, distorted by long-exposure movement. No gore, no injury.
+Right third: anonymous blurred pale human silhouette standing alone in a black void, ghostly body smeared by long exposure, unnerving and ambiguous.
+Style/medium: sophisticated avant-garde psychological horror and psychedelic experimental 16mm cinema. Photographic, visceral weirdness, crushed blacks and silver-white luminous highlights. Organic film grain and scratches, imperfect analog emulsion and motion.
+Composition: three self-contained equal vertical compositions inside one landscape image; eye centered in left third, mouth centered in center third, silhouette centered in right third. Each third can be independently cropped into a vertical film frame.
+Palette: monochrome black, white, and gray only.
+Constraints: all subjects invented and anonymous, no recognizable person. Artwork only. No text, letters, typography, logo, watermark, frames, borders, color, website, UI, or mockup. No gore or injury. Exactly one image.
