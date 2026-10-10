@@ -1,32 +1,32 @@
-// Fast chromatic field with bounded luminance. Pure red, IKB, black and white
-// are isolated accents, not members of the rapidly alternating palette.
+// Hand-selected chromatic colors, with no gray geometry or automatic palette
+// normalization. Full-intensity red, orange, black and white remain accents.
 export const CUT_RATE = 30;
 export const COLOR_RATE = 30;
 export const ACCENT_WIDTH = 2/30;
 export const ACCENTS = Object.freeze([
-  '#e51b2b','#002fa7','#e51b2b','#ffffff','#e51b2b',
-  '#000000','#002fa7','#ffffff','#e51b2b',
+  '#e51b2b','#002fa7','#ff5a00','#ffffff','#e51b2b',
+  '#000000','#ff5a00','#ffffff','#e51b2b',
 ].map((color,index)=>Object.freeze({start:index,end:index+ACCENT_WIDTH,color})));
-const luminance = rgb => rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722;
-const encode = value => Math.round(255*(value<=.0031308?12.92*value:1.055*value**(1/2.4)-.055));
-const hex = rgb => '#'+rgb.map(value=>encode(value).toString(16).padStart(2,'0')).join('');
-const balanced = rgb => {const gain=.13/luminance(rgb);return hex(rgb.map(value=>value*gain));};
 export const FIELD_COLORS = Object.freeze([
-  [.48,.07,.08], [.04,.09,.62], [.32,.075,.46],
-  [.22,.15,.025], [.34,.105,.025], [.06,.15,.30],
-].map(balanced));
-export const FIGURE_COLORS = Object.freeze([hex([.09,.09,.09]),hex([.17,.17,.17])]);
+  '#bf1d62', // Crimson.
+  '#002fa7', // Digital IKB, used directly without remapping.
+  '#7700d4', // Violet.
+  '#995300', // Deep amber, paired with pure-orange accents.
+  '#0046d5', // Cobalt.
+  '#5f00ed', // Electric violet.
+]);
 const order = [0,1,2,0,1,4,2,1,3,0,5,1];
 export function lightFrameAt(time){
   const tick=Math.floor(Math.max(0,time)*CUT_RATE);
   const beat=Math.floor(tick/2);
+  const colorIndex=order[tick%order.length];
   const accent=ACCENTS.find(cut=>time>=cut.start&&time<cut.end);
   return {
     tick,
     accent: Boolean(accent),
-    ground: accent?accent.color:FIELD_COLORS[order[tick%order.length]],
+    ground: accent?accent.color:FIELD_COLORS[colorIndex],
     figure: !accent&&tick%4<3 ? beat%5 : -1,
-    ink: FIGURE_COLORS[beat%2],
+    ink: FIELD_COLORS[(colorIndex+3+beat%2)%FIELD_COLORS.length],
     x: [.5,.15,.88,.4,.7][beat%5],
     y: [.5,.7,.22,.5,.8][beat%5],
     angle: (beat%4)*Math.PI/4,
