@@ -1,14 +1,14 @@
 # Prohibido Prohibir — luz, desgarro y vacío
 
-Apertura audiovisual de 112 segundos. Todavía no incluye la invitación.
+Apertura audiovisual de 34 segundos. Todavía no incluye la invitación.
 
 ## Recorrido
 
-- 0–26 s: cortes secos de luz blanca, roja oscura y azul oscuro, con figuras geométricas recortadas. Un pulso por evento, separados al menos 1,45 segundos; sin estrobo rápido.
-- 26–62 s: cuatro palabras, una a la vez. Once franjas de cada palabra se estiran, sesgan y separan en direcciones opuestas. La superficie pasa de negro a azul oscuro y después a blanco.
-- 62–104 s: seis apariciones de los videos existentes, en blanco y negro, aislados sobre fondo blanco. Entre ellos hay intervalos completamente vacíos de 1,3 a 3 segundos.
-- 104–109 s: blanco vacío.
-- 109–112 s: aparece discretamente el nombre. Al terminar se puede repetir.
+- 0–9 s: pulsos secos de 65 ms en blanco, rojo y azul oscuro. Como máximo un pulso de pantalla completa por segundo; entre pulsos, geometría tenue cambia siete veces por segundo.
+- 9–18 s: doce golpes tipográficos de 750 ms. Once franjas se desgarran en direcciones opuestas; las palabras y fuentes se repiten. El fondo cambia de negro a azul oscuro y finalmente blanco.
+- 18–32 s: catorce apariciones de video de 280–620 ms, separadas por blanco. Encuadres grandes, fijos en las cuatro esquinas, sin fundidos ni desplazamientos. En móvil ocupan el 82% del ancho y el 62% del alto.
+- 32–33 s: blanco vacío.
+- 33–34 s: aparece discretamente el nombre. Al terminar se puede repetir.
 
 La luz tiene pulsos separados, pero esta implementación no constituye una certificación de accesibilidad frente a fotosensibilidad. La preferencia de movimiento reducido inicia la escena pausada.
 

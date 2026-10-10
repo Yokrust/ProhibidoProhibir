@@ -1,5 +1,5 @@
 import { SoundScore } from './sound.js';
-import { DURATION, TYPE_START, FILM_START, phaseAt, pulseAt, shotAt } from './sequence.js';
+import { DURATION, TYPE_START, FILM_START, WHITE_START, WORD_DURATION, phaseAt, pulseAt, shotAt } from './sequence.js';
 
 const scene = document.getElementById('experience');
 const canvas = document.getElementById('light-sea');
@@ -40,11 +40,11 @@ function makeRenderer(){
     const scale=Math.min(w,h);
     const seed=n%6;
     const offset=(state.x-.5)*w*.06;
-    ctx.save();ctx.translate(w*.5+offset,h*.5+(state.y-.5)*h*.06);
+    ctx.save();ctx.translate(w*(.5+(lit?0:Math.sin(n*2.3)*.19))+offset,h*(.5+(lit?0:Math.cos(n*1.7)*.16))+(state.y-.5)*h*.06);
     ctx.rotate((n%3-1)*.12);
     ctx.fillStyle=lit?'#000000':'#666666';
     ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=Math.max(2,scale*.007);
-    if(!lit)ctx.globalAlpha=Math.max(0,.22-age*.08);
+    if(!lit)ctx.globalAlpha=.12;
     if(seed===0){ctx.beginPath();ctx.arc(0,0,scale*(.19+state.pressure*.1),0,TAU);ctx.fill();}
     else if(seed===1){
       ctx.fillStyle=lit?'#d8d8d8':'#777777';
@@ -70,9 +70,9 @@ function makeRenderer(){
     if(t<TYPE_START){
       const pulse=pulseAt(t);
       ctx.fillStyle=pulse.lit?pulse.color:'#000000';ctx.fillRect(0,0,w,h);
-      if(pulse.index>=0&&pulse.age<.85)shape(pulse.index,w,h,pulse.lit,pulse.age);
+      shape(pulse.lit?pulse.index:Math.floor(t*7),w,h,pulse.lit,pulse.age);
     }else if(t<FILM_START){
-      const index=Math.floor((t-TYPE_START)/9);
+      const index=Math.floor((t-TYPE_START)/3);
       ctx.fillStyle=index===0?'#000000':index===1?'#081238':'#ffffff';
       ctx.fillRect(0,0,w,h);
     }else{
@@ -97,22 +97,22 @@ function setVideo(index){
 function typography(t){
   if(t<TYPE_START||t>=FILM_START){typeStage.style.opacity='0';return;}
   const local=t-TYPE_START;
-  const index=Math.floor(local/9), part=(local%9)/9;
-  const text=['PROHIBIDO','prohibir','NO','PROHIBIR'][index];
+  const index=Math.floor(local/WORD_DURATION), part=(local%WORD_DURATION)/WORD_DURATION;
+  const text=['PROHIBIDO','NO','prohibir','PROHIBIR'][index%4];
   if(state.wordIndex!==index){
     state.wordIndex=index;
     strips.forEach(strip=>strip.textContent=text);
-    typeStage.className='type-stage '+['narrow','serif','mono',''][index];
+    typeStage.className='type-stage '+['narrow','serif','mono',''][index%4];
   }
-  const tension=smooth(.2,.89,part);
+  const tension=smooth(.08,.72,part);
   const tear=tension*tension;
-  const visibility=smooth(0,.055,part)*(1-smooth(.90,1,part));
-  typeStage.style.color=index<2?'#ffffff':'#000000';
+  const visibility=part<.94?1:0;
+  typeStage.style.color=t<WHITE_START?'#ffffff':'#000000';
   typeStage.style.opacity=String(visibility);
   strips.forEach((strip,i)=>{
     const direction=i%2===0?-1:1;
     const rip=(.2+Math.abs(i-5)/5)*tear;
-    const x=direction*rip*(54+state.pressure*30)+(state.x-.5)*tension*10;
+    const x=direction*rip*(72+state.pressure*30)+(state.x-.5)*tension*10;
     const y=(i-5)*tear*2.8;
     const stretch=1+tension*(.8+(i%3)*.55)+state.pressure*.45;
     const height=1+Math.sin(i*2.1)*tear*.5;
@@ -125,18 +125,17 @@ function render(){
   const phase=phaseAt(t);
   if(state.phase!==phase){state.phase=phase;scene.dataset.phase=String(phase);}
   scene.dataset.elapsed=t.toFixed(2);
-  scene.classList.toggle('white-field',t>=44);
+  scene.classList.toggle('white-field',t>=WHITE_START);
   if(!state.lost)renderer.draw();
   typography(t);
   const shot=shotAt(t);
   setVideo(shot?shot.video:-1);
   film.className='film '+(shot?shot.layout:'');
-  // Dry cuts and long blank intervals; no color overlays or enlarged backdrops.
+  // Each apparition stays fixed in its corner, then cuts straight to white.
   film.style.opacity=shot?'1':'0';
-  film.style.transform=`translate(-50%,-50%) scale(${1+state.pressure*.08})`;
-  afterimage.style.opacity=String(smooth(109,112,t));
+  afterimage.style.opacity=String(smooth(DURATION-1,DURATION,t));
   progress.style.transform=`scaleX(${t/DURATION})`;
-  notice.classList.toggle('dismissed',t>6);
+  notice.classList.toggle('dismissed',t>3);
   score.update(t,state.pressure);
 }
 function frame(now){
