@@ -5,9 +5,9 @@ export const EMPTY_START = 32;
 export const WHITE_START = 15;
 export const WORD_DURATION = .75;
 
-// Full-field pulses stay separated; fast motion comes from geometry and tearing.
+// Full-field pulses stay separated; dense local cuts provide the faster light rhythm.
 export const PULSES = Object.freeze([0,1,2,3,4,5,6,7,8]);
-export const PULSE_WIDTH = .065;
+export const PULSE_WIDTH = .045;
 export const PULSE_COLORS = Object.freeze(['#ffffff','#081238','#ffffff','#9d1115','#081238','#ffffff','#9d1115']);
 const corners = ['corner-tl','corner-br','corner-tr','corner-bl'];
 const images = [1,0,2,1,2,0,1,0,2,1,0,2,0,1];

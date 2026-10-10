@@ -4,7 +4,7 @@ Apertura audiovisual de 34 segundos. Todavía no incluye la invitación.
 
 ## Recorrido
 
-- 0–9 s: pulsos secos de 65 ms en blanco, rojo y azul oscuro. Como máximo un pulso de pantalla completa por segundo; entre pulsos, geometría tenue cambia siete veces por segundo.
+- 0–9 s: 144 composiciones de luz, a 16 cortes por segundo, sin intervalos de negro. Fondos oscuros continuos y planos de bajo contraste; fragmentos blancos, rojos y azules cambian de posición y orientación. Los fragmentos de alto contraste suman como máximo el 3,4% del área de cada cuadro. Los pulsos de pantalla completa duran 45 ms y siguen separados un segundo.
 - 9–18 s: doce golpes tipográficos de 750 ms. Once franjas se desgarran en direcciones opuestas; las palabras y fuentes se repiten. El fondo cambia de negro a azul oscuro y finalmente blanco.
 - 18–32 s: catorce apariciones de video de 280–620 ms, separadas por blanco. Encuadres grandes, fijos en las cuatro esquinas, sin fundidos ni desplazamientos. En móvil ocupan el 82% del ancho y el 62% del alto.
 - 32–33 s: blanco vacío.
@@ -31,6 +31,7 @@ Abrir `http://127.0.0.1:4173/`. No requiere instalación ni compilación.
 - `dist/index.html`: capas visuales y controles.
 - `dist/style.css`: composición, tipografías del sistema y adaptación a móvil.
 - `dist/sequence.js`: tiempos, paleta, pulsos y apariciones de video.
+- `dist/light-field.js`: composición determinista de planos y fragmentos de luz.
 - `dist/experience.js`: dibujo Canvas 2D, desgarro de texto e interacción.
 - `dist/sound.js`: composición sonora procedural con control de ganancia y compresión.
 - `dist/assets/*.mp4`: bucles originales de ocho segundos, sin audio, animados desde el tríptico generado.

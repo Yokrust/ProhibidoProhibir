@@ -1,3 +1,4 @@
+import { drawLightField } from './light-field.js';
 import { SoundScore } from './sound.js';
 import { DURATION, TYPE_START, FILM_START, WHITE_START, WORD_DURATION, phaseAt, pulseAt, shotAt } from './sequence.js';
 
@@ -35,42 +36,12 @@ function makeRenderer(){
   const ctx=canvas.getContext('2d',{alpha:false});
   if(!ctx)throw new Error('Canvas no disponible');
   scene.dataset.renderer='canvas';
-  const TAU=Math.PI*2;
-  function shape(n,w,h,lit,age){
-    const scale=Math.min(w,h);
-    const seed=n%6;
-    const offset=(state.x-.5)*w*.06;
-    ctx.save();ctx.translate(w*(.5+(lit?0:Math.sin(n*2.3)*.19))+offset,h*(.5+(lit?0:Math.cos(n*1.7)*.16))+(state.y-.5)*h*.06);
-    ctx.rotate((n%3-1)*.12);
-    ctx.fillStyle=lit?'#000000':'#666666';
-    ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=Math.max(2,scale*.007);
-    if(!lit)ctx.globalAlpha=.12;
-    if(seed===0){ctx.beginPath();ctx.arc(0,0,scale*(.19+state.pressure*.1),0,TAU);ctx.fill();}
-    else if(seed===1){
-      ctx.fillStyle=lit?'#d8d8d8':'#777777';
-      ctx.beginPath();ctx.moveTo(-scale*.22,scale*.23);ctx.lineTo(0,-scale*.28);ctx.lineTo(scale*.22,scale*.23);ctx.closePath();ctx.fill();
-    }else if(seed===2){
-      for(let j=-2;j<=2;j++)ctx.fillRect(j*scale*.105-scale*.025,-h*.55,scale*.05,h*1.1);
-    }else if(seed===3){
-      ctx.rotate(Math.PI/4);ctx.fillRect(-scale*.2,-scale*.2,scale*.4,scale*.4);
-      ctx.clearRect(-scale*.08,-scale*.08,scale*.16,scale*.16);
-    }else if(seed===4){
-      ctx.strokeStyle=lit?'#d8d8d8':'#555555';
-      ctx.beginPath();ctx.ellipse(0,0,scale*.35,scale*.08,0,0,TAU);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(0,-h*.4);ctx.lineTo(0,h*.4);ctx.stroke();
-    }else{
-      ctx.fillRect(-w*.55,-scale*.035,w*1.1,scale*.07);
-      ctx.fillRect(-scale*.035,-h*.55,scale*.07,h*1.1);
-    }
-    ctx.restore();
-  }
   return {resize(){},draw(){
     const w=canvas.width,h=canvas.height,t=state.time;
     ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
     if(t<TYPE_START){
       const pulse=pulseAt(t);
-      ctx.fillStyle=pulse.lit?pulse.color:'#000000';ctx.fillRect(0,0,w,h);
-      shape(pulse.lit?pulse.index:Math.floor(t*7),w,h,pulse.lit,pulse.age);
+      drawLightField(ctx,w,h,t,pulse);
     }else if(t<FILM_START){
       const index=Math.floor((t-TYPE_START)/3);
       ctx.fillStyle=index===0?'#000000':index===1?'#081238':'#ffffff';
