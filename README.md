@@ -4,7 +4,7 @@ Apertura audiovisual de 34 segundos. Todavía no incluye la invitación.
 
 ## Recorrido
 
-- 0–9 s: 270 cuadros cromáticos, a 30 cambios por segundo. Cada color ocupa toda la pantalla, sin negro intermedio, franjas ni paneles. Círculos, cruces, triángulos y elipses irrumpen en cuadros alternos. La paleta tiene luminancia normalizada y evita el rojo saturado; las figuras comparten un intervalo de luminancia estrecho.
+- 0–9 s: rojo `#E51B2B` y aproximación digital de IKB `#002FA7`, con violeta, amarillo y naranja. Los campos de color puro cambian cada 200 ms; negro y blanco interrumpen la secuencia en cuadros completos. Las figuras y variaciones tonales mantienen una actualización a 30 cuadros por segundo. El contraste de esas variaciones rápidas se mantiene acotado respecto al color del campo; en los cortes negros y blancos no hay figuras ni variaciones.
 - 9–18 s: doce golpes tipográficos de 750 ms. Once franjas se desgarran en direcciones opuestas; las palabras y fuentes se repiten. El fondo cambia de negro a azul oscuro y finalmente blanco.
 - 18–32 s: catorce apariciones de video de 280–620 ms, separadas por blanco. Encuadres grandes, fijos en las cuatro esquinas, sin fundidos ni desplazamientos. En móvil ocupan el 82% del ancho y el 62% del alto.
 - 32–33 s: blanco vacío.
@@ -45,4 +45,4 @@ Se analizó el archivo local `Colors Epilepsy Warning.mp4`: 1280×720, 20,07 s, 
 
 Se localizaron en YouTube `Colors (epilepsy warning)` (Deco Deco, https://www.youtube.com/watch?v=pDEdiyU1i70) y `Hyper Speed Color Changing` (Alex Voxel, https://www.youtube.com/watch?v=jft57_u2geU). El primer reproductor no permitió la reproducción; la segunda referencia sí se observó, con campos de color planos que llenan el cuadro. Las mediciones de frecuencia proceden exclusivamente del MP4 aportado.
 
-La implementación toma el ritmo y la ocupación de pantalla de la referencia, ajustando la luminancia y saturación. No reproduce la intensidad del estrobo RGB original. Referencia técnica: https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html
+La revisión de paleta conserva la ocupación de pantalla completa, pero separa el ritmo: campos de color puro a 5 cambios por segundo y detalle tonal a 30 cuadros por segundo. Esto permite usar rojo, IKB, negro y blanco sin alternarlos a 30 cambios por segundo. No reproduce la cadencia del estrobo RGB original. Referencia técnica: https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html
