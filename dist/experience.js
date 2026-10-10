@@ -1,6 +1,6 @@
 import { drawLightField } from './light-field.js';
 import { SoundScore } from './sound.js';
-import { DURATION, TYPE_START, FILM_START, WHITE_START, WORD_DURATION, phaseAt, pulseAt, shotAt } from './sequence.js';
+import { DURATION, TYPE_START, FILM_START, WHITE_START, WORD_DURATION, phaseAt, shotAt } from './sequence.js';
 
 const scene = document.getElementById('experience');
 const canvas = document.getElementById('light-sea');
@@ -40,8 +40,7 @@ function makeRenderer(){
     const w=canvas.width,h=canvas.height,t=state.time;
     ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';
     if(t<TYPE_START){
-      const pulse=pulseAt(t);
-      drawLightField(ctx,w,h,t,pulse);
+      drawLightField(ctx,w,h,t);
     }else if(t<FILM_START){
       const index=Math.floor((t-TYPE_START)/3);
       ctx.fillStyle=index===0?'#000000':index===1?'#081238':'#ffffff';

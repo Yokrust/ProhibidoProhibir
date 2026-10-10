@@ -4,13 +4,13 @@ Apertura audiovisual de 34 segundos. Todavía no incluye la invitación.
 
 ## Recorrido
 
-- 0–9 s: 144 composiciones de luz, a 16 cortes por segundo, sin intervalos de negro. Fondos oscuros continuos y planos de bajo contraste; fragmentos blancos, rojos y azules cambian de posición y orientación. Los fragmentos de alto contraste suman como máximo el 3,4% del área de cada cuadro. Los pulsos de pantalla completa duran 45 ms y siguen separados un segundo.
+- 0–9 s: 270 cuadros cromáticos, a 30 cambios por segundo. Cada color ocupa toda la pantalla, sin negro intermedio, franjas ni paneles. Círculos, cruces, triángulos y elipses irrumpen en cuadros alternos. La paleta tiene luminancia normalizada y evita el rojo saturado; las figuras comparten un intervalo de luminancia estrecho.
 - 9–18 s: doce golpes tipográficos de 750 ms. Once franjas se desgarran en direcciones opuestas; las palabras y fuentes se repiten. El fondo cambia de negro a azul oscuro y finalmente blanco.
 - 18–32 s: catorce apariciones de video de 280–620 ms, separadas por blanco. Encuadres grandes, fijos en las cuatro esquinas, sin fundidos ni desplazamientos. En móvil ocupan el 82% del ancho y el 62% del alto.
 - 32–33 s: blanco vacío.
 - 33–34 s: aparece discretamente el nombre. Al terminar se puede repetir.
 
-La luz tiene pulsos separados, pero esta implementación no constituye una certificación de accesibilidad frente a fotosensibilidad. La preferencia de movimiento reducido inicia la escena pausada.
+Los cambios cromáticos rápidos tienen contraste ajustado; esta implementación no constituye una certificación de accesibilidad frente a fotosensibilidad. La preferencia de movimiento reducido inicia la escena pausada.
 
 ## Interacción
 
@@ -30,11 +30,19 @@ Abrir `http://127.0.0.1:4173/`. No requiere instalación ni compilación.
 
 - `dist/index.html`: capas visuales y controles.
 - `dist/style.css`: composición, tipografías del sistema y adaptación a móvil.
-- `dist/sequence.js`: tiempos, paleta, pulsos y apariciones de video.
-- `dist/light-field.js`: composición determinista de planos y fragmentos de luz.
+- `dist/sequence.js`: tiempos y apariciones de video.
+- `dist/light-field.js`: campos cromáticos a pantalla completa y figuras fugaces.
 - `dist/experience.js`: dibujo Canvas 2D, desgarro de texto e interacción.
 - `dist/sound.js`: composición sonora procedural con control de ganancia y compresión.
 - `dist/assets/*.mp4`: bucles originales de ocho segundos, sin audio, animados desde el tríptico generado.
 - `source-art/nightmare-triptych.png`: imagen original generada para la segunda versión.
 - `source-art/nightmare-triptych.prompt.txt`: prompt completo de esa imagen.
 - `render-films.sh`: reproducción de los tres bucles con FFmpeg.
+
+## Referencia de esta revisión
+
+Se analizó el archivo local `Colors Epilepsy Warning.mp4`: 1280×720, 20,07 s, 29,97 fps, 599 fotogramas decodificados. Hay 597 cambios grandes de color, con separaciones predominantes de 33,37 ms, alternando RGB a pantalla completa. El archivo no se incluye ni se reproduce en el sitio.
+
+Se localizaron en YouTube `Colors (epilepsy warning)` (Deco Deco, https://www.youtube.com/watch?v=pDEdiyU1i70) y `Hyper Speed Color Changing` (Alex Voxel, https://www.youtube.com/watch?v=jft57_u2geU). El primer reproductor no permitió la reproducción; la segunda referencia sí se observó, con campos de color planos que llenan el cuadro. Las mediciones de frecuencia proceden exclusivamente del MP4 aportado.
+
+La implementación toma el ritmo y la ocupación de pantalla de la referencia, ajustando la luminancia y saturación. No reproduce la intensidad del estrobo RGB original. Referencia técnica: https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html

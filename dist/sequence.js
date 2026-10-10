@@ -5,10 +5,6 @@ export const EMPTY_START = 32;
 export const WHITE_START = 15;
 export const WORD_DURATION = .75;
 
-// Full-field pulses stay separated; dense local cuts provide the faster light rhythm.
-export const PULSES = Object.freeze([0,1,2,3,4,5,6,7,8]);
-export const PULSE_WIDTH = .045;
-export const PULSE_COLORS = Object.freeze(['#ffffff','#081238','#ffffff','#9d1115','#081238','#ffffff','#9d1115']);
 const corners = ['corner-tl','corner-br','corner-tr','corner-bl'];
 const images = [1,0,2,1,2,0,1,0,2,1,0,2,0,1];
 export const SHOTS = Object.freeze(images.map((video,i)=>Object.freeze({
@@ -18,9 +14,4 @@ export const SHOTS = Object.freeze(images.map((video,i)=>Object.freeze({
   layout: corners[i%4],
 })));
 export function phaseAt(t){return t<TYPE_START?0:t<FILM_START?1:t<EMPTY_START?2:3;}
-export function pulseAt(t){
-  const index=PULSES.findLastIndex(start=>start<=t);
-  const age=index<0?Infinity:t-PULSES[index];
-  return {index,age,lit:age<PULSE_WIDTH,color:PULSE_COLORS[Math.max(0,index)%PULSE_COLORS.length]};
-}
 export function shotAt(t){return SHOTS.find(shot=>t>=shot.start&&t<shot.end)||null;}
