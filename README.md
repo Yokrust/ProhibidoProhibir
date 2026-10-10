@@ -4,7 +4,7 @@ Apertura audiovisual de 34 segundos. Todavía no incluye la invitación.
 
 ## Recorrido
 
-- 0–9 s: rojo `#E51B2B` y aproximación digital de IKB `#002FA7`, con violeta, amarillo y naranja. Los campos de color puro cambian cada 200 ms; negro y blanco interrumpen la secuencia en cuadros completos. Las figuras y variaciones tonales mantienen una actualización a 30 cuadros por segundo. El contraste de esas variaciones rápidas se mantiene acotado respecto al color del campo; en los cortes negros y blancos no hay figuras ni variaciones.
+- 0–9 s: el campo cromático vuelve a 30 cambios por segundo (frente a los 5 de la revisión anterior). La paleta rápida mantiene luminancia similar y evita el rojo saturado. Rojo puro `#E51B2B`, IKB digital `#002FA7`, negro y blanco aparecen como nueve acentos de 67 ms separados un segundo. Las figuras cambian de posición, giro y escala cada 67 ms, con contraste de luminancia acotado.
 - 9–18 s: doce golpes tipográficos de 750 ms. Once franjas se desgarran en direcciones opuestas; las palabras y fuentes se repiten. El fondo cambia de negro a azul oscuro y finalmente blanco.
 - 18–32 s: catorce apariciones de video de 280–620 ms, separadas por blanco. Encuadres grandes, fijos en las cuatro esquinas, sin fundidos ni desplazamientos. En móvil ocupan el 82% del ancho y el 62% del alto.
 - 32–33 s: blanco vacío.
@@ -45,4 +45,4 @@ Se analizó el archivo local `Colors Epilepsy Warning.mp4`: 1280×720, 20,07 s, 
 
 Se localizaron en YouTube `Colors (epilepsy warning)` (Deco Deco, https://www.youtube.com/watch?v=pDEdiyU1i70) y `Hyper Speed Color Changing` (Alex Voxel, https://www.youtube.com/watch?v=jft57_u2geU). El primer reproductor no permitió la reproducción; la segunda referencia sí se observó, con campos de color planos que llenan el cuadro. Las mediciones de frecuencia proceden exclusivamente del MP4 aportado.
 
-La revisión de paleta conserva la ocupación de pantalla completa, pero separa el ritmo: campos de color puro a 5 cambios por segundo y detalle tonal a 30 cuadros por segundo. Esto permite usar rojo, IKB, negro y blanco sin alternarlos a 30 cambios por segundo. No reproduce la cadencia del estrobo RGB original. Referencia técnica: https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html
+La revisión conserva los cambios cromáticos a pantalla completa a 30 cuadros por segundo, con luminancia normalizada entre los colores rápidos. El rojo intenso, el IKB puro, negro y blanco son acentos separados. No reproduce la intensidad del estrobo RGB original. Referencia técnica: https://www.w3.org/WAI/WCAG22/Understanding/three-flashes-or-below-threshold.html
