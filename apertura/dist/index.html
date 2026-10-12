@@ -4,34 +4,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
-  <meta name="description" content="Prohibido Prohibir. Luz, desgarro y vacío. Una apertura audiovisual experimental.">
+  <meta name="description" content="Prohibido Prohibir. Luz, censura y vacío. Una apertura audiovisual experimental.">
   <title>Prohibido Prohibir</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23000000'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23ffffff' stroke-width='3'/%3E%3Cpath d='m5 5 22 22' stroke='%239d1115' stroke-width='4'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./experience.js"></script>
 </head>
 <body>
-  <main id="experience" class="experience" aria-label="Prohibido Prohibir, experiencia audiovisual experimental">
+  <main id="experience" class="experience" tabindex="-1" aria-label="Prohibido Prohibir, experiencia audiovisual experimental">
     <canvas id="light-sea" aria-hidden="true"></canvas>
-    <div class="film" id="film" aria-hidden="true">
-      <video id="eye-film" muted playsinline loop preload="metadata" src="./assets/eye.mp4"></video>
-      <video id="scream-film" muted playsinline loop preload="metadata" src="./assets/scream.mp4"></video>
-      <video id="apparition-film" muted playsinline loop preload="metadata" src="./assets/apparition.mp4"></video>
-    </div>
     <div class="type-stage" id="type-stage" aria-hidden="true"></div>
-    <div class="afterimage" id="afterimage" aria-hidden="true"><span>PROHIBIDO</span><span>PROHIBIR</span></div>
+    <section id="white-space" class="white-space" aria-label="Campo blanco interactivo" hidden>
+      <canvas aria-hidden="true"></canvas>
+      <button class="white-touch" aria-label="Tensar el blanco" aria-describedby="white-help" aria-pressed="false" disabled></button>
+      <span class="white-instruction" aria-hidden="true" hidden>mantén</span>
+      <div class="white-signature" aria-hidden="true"><span>PROHIBIDO</span><span>PROHIBIR</span></div>
+      <p id="white-help" class="sr-only">Mantén pulsada la incisión, o mantén Espacio o Intro, para tensar el blanco. Puedes arrastrar mientras mantienes pulsado. Al soltar, la huella roja sigue extendiéndose y permanece. Con movimiento reducido, la huella cambia únicamente al intervenir. Escape vuelve a la entrada.</p>
+    </section>
     <h1 class="sr-only">Prohibido Prohibir</h1>
-    <button class="control pause-control" id="pause" aria-label="Pausar la experiencia" aria-pressed="false" title="Pausar · Escape">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path class="pause-path" d="M8 5v14M16 5v14"/><path class="play-path" d="m9 5 10 7-10 7Z"/></svg>
-    </button>
-    <button class="control sound-control" id="sound" aria-pressed="false" aria-label="Activar sonido">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5 5 9H2v6h3l5 4Z"/><path class="sound-wave" d="M14 8c3 2 3 6 0 8M17 4c6 4 6 12 0 16"/><path class="sound-off" d="m15 9 6 6m0-6-6 6"/></svg>
-      <span id="sound-label">Sonido</span>
-    </button>
-    <p class="notice" id="notice">Cambios rápidos de color · sonido opcional</p>
-    <button class="continue-control" id="continue" hidden>Continuar</button>
-    <button class="replay-control" id="replay" hidden>Repetir</button>
-    <div class="progress" aria-hidden="true"><i id="progress-fill"></i></div>
+    <section class="entry" id="entry" aria-label="Entrada a la experiencia">
+      <div class="entry-content">
+        <button id="enter" class="enter-button" aria-describedby="entry-note">Entrar</button>
+        <p id="entry-note" class="entry-note">Luces rápidas y sonido. Esc para salir.</p>
+        <p id="entry-error" class="entry-error" role="alert" hidden></p>
+      </div>
+    </section>
     <p id="status" class="sr-only" role="status" aria-live="polite"></p>
     <noscript><p class="noscript-note">Activa JavaScript para iniciar la experiencia.</p></noscript>
   </main>

@@ -1,17 +1,13 @@
-export const DURATION = 34;
+export const INTRO_DURATION = 24;
 export const TYPE_START = 9;
-export const FILM_START = 18;
-export const EMPTY_START = 32;
-export const WHITE_START = 15;
-export const WORD_DURATION = .75;
+export const WHITE_START = INTRO_DURATION;
 
-const corners = ['corner-tl','corner-br','corner-tr','corner-bl'];
-const images = [1,0,2,1,2,0,1,0,2,1,0,2,0,1];
-export const SHOTS = Object.freeze(images.map((video,i)=>Object.freeze({
-  start: FILM_START+i*1.025,
-  end: FILM_START+i*1.025+[.28,.42,.62][i%3],
-  video,
-  layout: corners[i%4],
-})));
-export function phaseAt(t){return t<TYPE_START?0:t<FILM_START?1:t<EMPTY_START?2:3;}
-export function shotAt(t){return SHOTS.find(shot=>t>=shot.start&&t<shot.end)||null;}
+// Three held impressions, rather than a loop of interchangeable words.
+export const TYPE_ACTS = Object.freeze([
+  Object.freeze({start:9, end:14, id:'question', background:'#000000', ink:'#ffffff', text:'¿Quién decide qué se calla?'}),
+  Object.freeze({start:14, end:19, id:'silence', background:'#ffffff', ink:'#000000', text:'El silencio se fabrica.'}),
+  Object.freeze({start:19, end:24, id:'refusal', background:'#000000', ink:'#ffffff', text:'Prohibido prohibir.'}),
+]);
+export function typeActAt(t){return TYPE_ACTS.find(act=>t>=act.start&&t<act.end)||null;}
+
+export function phaseAt(t){return t<TYPE_START?0:t<WHITE_START?1:2;}

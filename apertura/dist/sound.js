@@ -1,5 +1,5 @@
-import { TYPE_START, FILM_START, EMPTY_START, DURATION, WORD_DURATION, SHOTS } from './sequence.js';
-/** Procedural score: synthetic voices, air, beating drones. No recordings. */
+import { TYPE_START, WHITE_START } from './sequence.js';
+/** Procedural score: light-field drones and dry printed matter; the white field is silent. */
 export class SoundScore {
   constructor() {
     this.context = null;
@@ -7,15 +7,26 @@ export class SoundScore {
     this.playing = false;
     this.voices = new Set();
     this.lastCue = -1;
-    this.cues = [...Array.from({length:12},(_,i)=>TYPE_START+i*WORD_DURATION), ...SHOTS.map(shot=>shot.start)];
+    this.cues = [
+      {time:9,kind:'press',duration:.22},
+      {time:11.65,kind:'friction',duration:.55},
+      {time:12.45,kind:'friction',duration:.6},
+      {time:14,kind:'press',duration:.22},
+      {time:16.9,kind:'press',duration:.18},
+      {time:17.7,kind:'press',duration:.2},
+      {time:19,kind:'press',duration:.24},
+      {time:20.65,kind:'friction',duration:.45},
+      {time:22.35,kind:'friction',duration:.6},
+    ];
   }
-  async enable(position, playing) {
+  async enable(position, playing, stillValid = () => true) {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     if (!AudioContext) return false;
     if (!this.context) this.build(new AudioContext());
     await this.context.resume();
+    if (!stillValid()) return false;
     this.enabled = true;
-    this.lastCue = this.cues.filter(t => t <= position).length - 1;
+    this.lastCue = this.cues.filter(cue => cue.time <= position).length - 1;
     this.setPlaying(playing);
     return true;
   }
@@ -39,6 +50,13 @@ export class SoundScore {
       last = (last + (Math.random() * 2 - 1) * 0.04) / 1.04;
       samples[i] = last * 3.5;
     }
+    this.dryNoise=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);
+    const dry=this.dryNoise.getChannelData(0);
+    let seed=681;
+    for(let i=0;i<dry.length;i++){
+      seed=(seed*1664525+1013904223)>>>0;
+      dry[i]=seed/2147483648-1;
+    }
     this.bedGain = ctx.createGain();
     this.bedGain.gain.value = 0.12;
     this.bedFilter = ctx.createBiquadFilter();
@@ -49,6 +67,7 @@ export class SoundScore {
     air.loop = true;
     air.connect(this.bedFilter).connect(this.bedGain).connect(this.output);
     air.start();
+    this.droneGains=[];
     this.drones = [43.65, 58.27, 88.2].map((frequency, i) => {
       const oscillator = ctx.createOscillator();
       oscillator.type = i === 2 ? 'triangle' : 'sawtooth';
@@ -56,6 +75,7 @@ export class SoundScore {
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass'; filter.frequency.value = 190;
       const gain = ctx.createGain(); gain.gain.value = 0.055;
+      this.droneGains.push(gain);
       oscillator.connect(filter).connect(gain).connect(this.output);
       oscillator.start();
       return oscillator;
@@ -77,74 +97,71 @@ export class SoundScore {
     this.voices.clear();
   }
   restart() { this.lastCue = -1; this.stopVoices(); }
-  update(position, pressure) {
+  update(position) {
     if (!this.enabled || !this.playing || !this.context) return;
+    if(position>=WHITE_START){this.disable();return;}
     const now = this.context.currentTime;
-    const intensity = position < TYPE_START ? position / TYPE_START : position < FILM_START ? 0.85 : 0.10;
-    const ending = position > EMPTY_START ? Math.max(0, 1 - (position - EMPTY_START) / (DURATION-EMPTY_START)) : 1;
-    this.output.gain.setTargetAtTime(0.7 * ending, now, 0.2);
-    this.bedFilter.frequency.setTargetAtTime(250 + intensity * 1100 + pressure * 1600, now, 0.12);
-    this.bedGain.gain.setTargetAtTime(position < FILM_START ? 0.12 + intensity * 0.13 : 0.018, now, 0.2);
+    const inType=position>=TYPE_START&&position<WHITE_START;
+    const intensity = position < TYPE_START ? position / TYPE_START : 0.12;
+    this.output.gain.setTargetAtTime(0.7, now, 0.2);
+    this.bedFilter.frequency.setTargetAtTime(inType?120:250 + intensity * 1100, now, 0.12);
+    this.bedGain.gain.setTargetAtTime(inType?0:0.12 + intensity * 0.13, now, inType?.045:.2);
     for (let i = 0; i < this.drones.length; i++) {
+      this.droneGains[i].gain.setTargetAtTime(inType?0:.055,now,inType?.045:.15);
       this.drones[i].detune.setTargetAtTime(Math.sin(position * 0.39 + i) * (8 + intensity * 24), now, 0.15);
     }
-    const cue = this.cues.findLastIndex(t => position >= t);
+    const cue = this.cues.findLastIndex(cue => position >= cue.time);
     if (cue > this.lastCue) {
       this.lastCue = cue;
       // Enabling sound halfway through does not replay missed cues.
-      if (position - this.cues[cue] < 0.3) this.scream(cue, position >= FILM_START ? .38 : .52);
+      const event=this.cues[cue];
+      if (position - event.time < 0.15) {
+        this.impression(event.kind,event.duration,cue);
+      }
     }
   }
-  scream(index, duration) {
-    const ctx = this.context;
-    const now = ctx.currentTime;
-    const envelope = ctx.createGain();
-    envelope.gain.setValueAtTime(0, now);
-    envelope.gain.linearRampToValueAtTime(0.46, now + 0.035);
-    envelope.gain.setTargetAtTime(0.28, now + duration * 0.42, 0.2);
-    envelope.gain.linearRampToValueAtTime(0, now + duration);
-    const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : ctx.createGain();
-    if (panner.pan) panner.pan.setValueAtTime(index % 2 === 0 ? -0.36 : 0.36, now);
-    envelope.connect(panner).connect(this.output);
-    const formants = [780, 1180, 2650].map((frequency, i) => {
-      const filter = ctx.createBiquadFilter();
-      filter.type = 'bandpass'; filter.Q.value = [6, 9, 13][i];
-      filter.frequency.setValueAtTime(frequency, now);
-      filter.frequency.linearRampToValueAtTime(frequency * 1.22, now + duration * 0.5);
-      filter.frequency.linearRampToValueAtTime(frequency * 0.8, now + duration);
-      const gain = ctx.createGain(); gain.gain.value = [0.6, 0.35, 0.17][i];
-      filter.connect(gain).connect(envelope);
-      return filter;
-    });
-    const sources = [];
-    for (let i = 0; i < 2; i++) {
-      const voice = ctx.createOscillator();
-      voice.type = 'sawtooth';
-      const base = 230 + (index % 3) * 45 + i * 3;
-      voice.frequency.setValueAtTime(base, now);
-      voice.frequency.exponentialRampToValueAtTime(base * 2.9, now + duration * 0.3);
-      voice.frequency.exponentialRampToValueAtTime(base * 1.7, now + duration * 0.74);
-      voice.frequency.exponentialRampToValueAtTime(base * 0.75, now + duration);
-      const wobble = ctx.createOscillator();
-      wobble.frequency.value = 23 + index % 5;
-      const wobbleGain = ctx.createGain(); wobbleGain.gain.value = 32;
-      wobble.connect(wobbleGain).connect(voice.frequency);
-      formants.forEach(filter => voice.connect(filter));
-      voice.start(now); wobble.start(now);
-      voice.stop(now + duration); wobble.stop(now + duration);
-      sources.push(voice, wobble);
+  impression(kind,duration,index,when=this.context.currentTime){
+    const ctx=this.context,now=when;
+    const press=kind==='press';
+    const envelope=ctx.createGain();
+    const filter=ctx.createBiquadFilter();
+    filter.type=press?'lowpass':'bandpass';
+    filter.frequency.value=press?1700:620;
+    filter.Q.value=press?.55:.65;
+    const panner=ctx.createStereoPanner?ctx.createStereoPanner():ctx.createGain();
+    if(panner.pan)panner.pan.value=index%2===0?-.12:.12;
+    filter.connect(envelope).connect(panner).connect(this.output);
+    const sources=[],cleanup=[filter,envelope,panner];
+    const noise=ctx.createBufferSource();noise.buffer=this.dryNoise;
+    noise.connect(filter);sources.push(noise);
+    if(press){
+      envelope.gain.setValueAtTime(0,now);
+      envelope.gain.linearRampToValueAtTime(1.3,now+.003);
+      envelope.gain.exponentialRampToValueAtTime(.025,now+duration*.7);
+      envelope.gain.linearRampToValueAtTime(0,now+duration);
+      const body=ctx.createOscillator(),bodyGain=ctx.createGain();
+      body.type='sine';body.frequency.setValueAtTime(118,now);
+      body.frequency.exponentialRampToValueAtTime(58,now+.12);
+      bodyGain.gain.setValueAtTime(.36,now);
+      bodyGain.gain.exponentialRampToValueAtTime(.002,now+duration);
+      body.connect(bodyGain).connect(envelope);
+      sources.push(body);cleanup.push(bodyGain);
+    }else{
+      const curve=new Float32Array(80);
+      for(let i=0;i<curve.length;i++){
+        const phase=i/(curve.length-1);
+        const edge=Math.min(1,phase*14,(1-phase)*10);
+        curve[i]=edge*(.32+.10*Math.sin(i*2.37)+.055*Math.sin(i*.91));
+      }
+      envelope.gain.setValueCurveAtTime(curve,now,duration);
     }
-    const breath = ctx.createBufferSource();
-    breath.buffer = this.noise;
-    breath.connect(formants[1]);
-    breath.start(now); breath.stop(now + duration);
-    sources.push(breath);
-    for (const source of sources) {
+    for(const source of sources){
       this.voices.add(source);
-      source.addEventListener('ended', () => { source.disconnect(); this.voices.delete(source); }, {once:true});
+      source.start(now);source.stop(now+duration);
+      source.addEventListener('ended',()=>{
+        source.disconnect();this.voices.delete(source);
+      },{once:true});
     }
-    breath.addEventListener('ended', () => {
-      envelope.disconnect(); panner.disconnect(); formants.forEach(filter => filter.disconnect());
-    }, {once:true});
+    noise.addEventListener('ended',()=>cleanup.forEach(node=>node.disconnect()),{once:true});
   }
 }
