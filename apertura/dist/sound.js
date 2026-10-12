@@ -1,5 +1,5 @@
-import { TYPE_START, WHITE_START } from './sequence.js';
-/** Procedural score: light-field drones and dry printed matter; the white field is silent. */
+import { TYPE_START } from './sequence.js?v=16';
+/** The original light-field score ends at 9 s; identity impressions are silent. */
 export class SoundScore {
   constructor() {
     this.context = null;
@@ -7,17 +7,7 @@ export class SoundScore {
     this.playing = false;
     this.voices = new Set();
     this.lastCue = -1;
-    this.cues = [
-      {time:9,kind:'press',duration:.22},
-      {time:11.65,kind:'friction',duration:.55},
-      {time:12.45,kind:'friction',duration:.6},
-      {time:14,kind:'press',duration:.22},
-      {time:16.9,kind:'press',duration:.18},
-      {time:17.7,kind:'press',duration:.2},
-      {time:19,kind:'press',duration:.24},
-      {time:20.65,kind:'friction',duration:.45},
-      {time:22.35,kind:'friction',duration:.6},
-    ];
+    this.cues = [];
   }
   async enable(position, playing, stillValid = () => true) {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -99,9 +89,15 @@ export class SoundScore {
   restart() { this.lastCue = -1; this.stopVoices(); }
   update(position) {
     if (!this.enabled || !this.playing || !this.context) return;
-    if(position>=WHITE_START){this.disable();return;}
+    if(position>=TYPE_START){
+      // Stop once. The single logo arrival has no added sound.
+      const now=this.context.currentTime;
+      this.output.gain.cancelScheduledValues(now);
+      this.output.gain.setValueAtTime(0,now);
+      this.disable();this.context.suspend().catch(()=>{});return;
+    }
     const now = this.context.currentTime;
-    const inType=position>=TYPE_START&&position<WHITE_START;
+    const inType=position>=TYPE_START;
     const intensity = position < TYPE_START ? position / TYPE_START : 0.12;
     this.output.gain.setTargetAtTime(0.7, now, 0.2);
     this.bedFilter.frequency.setTargetAtTime(inType?120:250 + intensity * 1100, now, 0.12);

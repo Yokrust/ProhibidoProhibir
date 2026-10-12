@@ -1,6 +1,6 @@
 # Prohibido Prohibir
 
-Proyecto audiovisual, archivos fuente y versiones de la apertura.
+Proyecto artístico, presentación editorial y apertura audiovisual interactiva.
 
 ## Ejecutar la apertura
 
@@ -11,6 +11,8 @@ python3 -m http.server 4173 --bind 127.0.0.1 --directory apertura/dist
 Abrir `http://127.0.0.1:4173/`. No requiere instalación ni compilación.
 
 La documentación de la experiencia y sus controles está en [apertura/README.md](apertura/README.md).
+La presentación del proyecto se puede abrir directamente en `http://127.0.0.1:4173/proyecto.html`.
+La procedencia de las marcas y las decisiones visuales está en [IdentidadVisual/README.md](IdentidadVisual/README.md).
 
 ## Vercel
 
@@ -26,5 +28,7 @@ GitHub está activa. Si está desactivada, ejecutar **Redeploy** con el último 
 
 - `apertura/`: experiencia completa, videos, tipografías, arte original y script de renderizado.
 - `assets-source/`: recursos originales y prompt de generación.
+- `IdentidadVisual/`: documento y exportaciones oficiales de Prohibido Prohibir!.
+- `Colaboradores/`: marcas originales de Broyer du Noir. y La Societe Depressive.
 - `apertura-*.jpg` y `reference-colors-contact.jpg`: vistas previas y referencia visual.
 - `prohibido-apertura*.tar.gz`: paquetes de las versiones del proyecto.

@@ -1,13 +1,14 @@
 import { drawLightField } from './light-field.js';
-import { SoundScore } from './sound.js';
-import { TypeIntervention } from './typography.js';
-import { WhiteSpace } from './white-space.js';
-import { INTRO_DURATION, TYPE_START, WHITE_START, phaseAt, typeActAt } from './sequence.js';
+import { SoundScore } from './sound.js?v=16';
+import { TypeIntervention } from './typography.js?v=16';
+import { WhiteSpace } from './white-space.js?v=15';
+import { INTRO_DURATION, TYPE_START, WHITE_START, phaseAt, typeActAt } from './sequence.js?v=16';
 
 const scene=document.getElementById('experience');
 const canvas=document.getElementById('light-sea');
 const entry=document.getElementById('entry');
 const enterButton=document.getElementById('enter');
+const quietButton=document.getElementById('enter-quiet');
 const entryNote=document.getElementById('entry-note');
 const entryError=document.getElementById('entry-error');
 const status=document.getElementById('status');
@@ -15,7 +16,7 @@ const typeStage=document.getElementById('type-stage');
 const typeIntervention=new TypeIntervention(typeStage);
 const motion=matchMedia('(prefers-reduced-motion: reduce)');
 const score=new SoundScore();
-const state={time:0,mode:'entry',frame:0,last:0,phase:-1,typeAct:'',width:1,height:1,starting:false,startToken:0};
+const state={time:0,mode:'entry',frame:0,last:0,phase:-1,typeAct:'',width:1,height:1,starting:false,startToken:0,manualReduced:false};
 const white=new WhiteSpace(document.getElementById('white-space'),()=>{
   if(state.mode==='white'){white.update(0);schedule();}
 });
@@ -83,6 +84,7 @@ function schedule(){
 function entryCopy(){
   enterButton.textContent=motion.matches?'Ver sin animación':'Entrar';
   entryNote.textContent=motion.matches?'Movimiento reducido activado.':'Luces rápidas y sonido. Esc para salir.';
+  quietButton.hidden=motion.matches;
 }
 function stopToEntry(message='Experiencia detenida.',focus=true){
   state.startToken++;state.starting=false;state.mode='entry';state.last=0;
@@ -93,6 +95,7 @@ function stopToEntry(message='Experiencia detenida.',focus=true){
 }
 async function enter(){
   if(state.starting||active())return;
+  state.manualReduced=false;
   if(motion.matches){
     entry.hidden=true;state.last=0;state.phase=-1;
     openWhite(true);scene.focus({preventScroll:true});return;
@@ -101,23 +104,35 @@ async function enter(){
   state.starting=true;enterButton.disabled=true;entryError.hidden=true;
   try{
     // Web Audio is activated by this explicit entry gesture.
-    const enabled=await score.enable(0,false,()=>token===state.startToken&&!document.hidden);
+    const [enabled,assetsReady]=await Promise.all([
+      score.enable(0,false,()=>token===state.startToken&&!document.hidden),
+      typeIntervention.ready,
+    ]);
     if(token!==state.startToken)return;
     if(document.hidden){stopToEntry('Experiencia detenida.',false);return;}
+    if(!assetsReady)throw new Error('Assets unavailable');
     if(!enabled||score.context?.state!=='running')throw new Error('Audio unavailable');
     state.time=0;state.phase=-1;state.typeAct='';state.last=0;state.mode='running';
     score.restart();score.setPlaying(true);entry.hidden=true;
     scene.focus({preventScroll:true});render();schedule();
     status.textContent='Experiencia iniciada con sonido.';
-  }catch{
+  }catch(error){
     if(token!==state.startToken)return;
-    score.disable();entryError.textContent='No se pudo activar el sonido. Pulsa Entrar para intentarlo de nuevo.';
+    score.disable();entryError.textContent=error.message==='Assets unavailable'
+      ?'No se pudieron cargar las marcas. Recarga la página para intentarlo de nuevo.'
+      :'No se pudo activar el sonido. Pulsa Entrar para intentarlo de nuevo.';
     entryError.hidden=false;
   }finally{
     if(token===state.startToken){state.starting=false;enterButton.disabled=false;}
   }
 }
 enterButton.addEventListener('click',enter);
+quietButton.addEventListener('click',()=>{
+  if(active())return;
+  state.startToken++;state.starting=false;state.manualReduced=true;
+  enterButton.disabled=false;entryError.hidden=true;entry.hidden=true;
+  state.last=0;state.phase=-1;openWhite(true);scene.focus({preventScroll:true});
+});
 document.addEventListener('keydown',event=>{
   if(event.code==='Escape'&&!event.repeat&&(state.mode!=='entry'||state.starting)){
     event.preventDefault();stopToEntry();
@@ -130,8 +145,8 @@ window.addEventListener('pagehide',()=>stopToEntry('Experiencia detenida.',false
 motion.addEventListener('change',()=>{
   if(motion.matches&&(state.mode==='running'||state.starting))stopToEntry('Movimiento reducido activado.');
   else if(state.mode==='white'){
-    white.cancel();white.model.reduced=motion.matches;
-    if(motion.matches)white.model.age=Math.max(8,white.model.age);
+    white.cancel();white.model.reduced=motion.matches||state.manualReduced;
+    if(white.model.reduced)white.model.age=Math.max(9,white.model.age);
     white.update(0);
   }else entryCopy();
 });

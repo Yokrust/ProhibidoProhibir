@@ -116,13 +116,13 @@ export function drawLiquid(ctx,flow,center,width,height){
       // A thin translucent edge reads as a wet film against the white surface.
       for(const fringe of [true,false]){
         const outline=fringe?points.map(p=>({...p,radius:p.radius+.55})):points;
-        ctx.fillStyle=fringe?'rgba(170,0,9,.15)':'#df0a13';ctx.beginPath();
+        ctx.fillStyle=fringe?'rgba(170,0,9,.15)':'#ec1d25';ctx.beginPath();
         ctx.moveTo(outline[0].x-outline[0].radius,outline[0].y);
         side(ctx,outline,-1);side(ctx,[...outline].reverse(),1);ctx.closePath();ctx.fill();
       }
       if(r.parent!==null){
         const contact=r.trail.at(-1);
-        ctx.fillStyle='#df0a13';ctx.beginPath();
+        ctx.fillStyle='#ec1d25';ctx.beginPath();
         ctx.ellipse(contact.x,contact.y,contact.radius,contact.radius*.82,0,0,Math.PI*2);ctx.fill();
       }
     }
@@ -130,7 +130,7 @@ export function drawLiquid(ctx,flow,center,width,height){
     const stretch=1+Math.min(.5,r.velocity*.021);
     if(r.head){
       const wet=ctx.createRadialGradient(r.x-radius*.3,r.y-radius*.2,radius*.04,r.x,r.y+radius*.22,radius*1.22);
-      wet.addColorStop(0,'#fc2229');wet.addColorStop(.55,'#dd0a13');wet.addColorStop(1,'#a6020c');
+      wet.addColorStop(0,'#fc353b');wet.addColorStop(.55,'#ec1d25');wet.addColorStop(1,'#a6020c');
       ctx.fillStyle=wet;ctx.beginPath();
       ctx.moveTo(r.x-neck,r.y-radius*stretch*.72);
       ctx.bezierCurveTo(r.x-radius*.79,r.y-radius*.42,r.x-radius*1.03,r.y+radius*.42,r.x-radius*.57,r.y+radius*stretch*.83);

@@ -1,4 +1,4 @@
-import {LiquidFlow,drawLiquid} from './liquid-flow.js';
+import {LiquidFlow,drawLiquid} from './liquid-flow.js?v=15';
 
 const clamp=(value,min=0,max=1)=>Math.max(min,Math.min(max,value));
 const settle=(value,target,dt,speed)=>value+(target-value)*(1-Math.exp(-dt*speed));
@@ -70,6 +70,7 @@ export class WhiteSpace {
     this.stage=stage;this.target=stage.querySelector('.white-touch');
     this.hint=stage.querySelector('.white-instruction');
     this.signature=stage.querySelector('.white-signature');
+    this.projectLink=stage.querySelector('.white-project-link');
     this.canvas=stage.querySelector('canvas');this.ctx=this.canvas.getContext('2d');
     this.model=new WhitePressure();this.active=false;this.pointer=null;this.key=null;
     this.onChange=onChange;this.bind();
@@ -80,7 +81,7 @@ export class WhiteSpace {
     this.active=true;this.drawKey='';this.stage.hidden=false;this.stage.dataset.input='pointer';this.target.disabled=!reduced;
     this.draw();
   }
-  deactivate(){this.cancel();this.active=false;this.stage.hidden=true;}
+  deactivate(){this.cancel();this.active=false;this.stage.hidden=true;if(this.projectLink)this.projectLink.hidden=true;}
   cancel(){
     const pointer=this.pointer;this.pointer=null;this.key=null;
     this.model.release(false);
@@ -142,8 +143,9 @@ export class WhiteSpace {
     const ready=m.reduced||m.age>=2.8;
     const hint=ready&&m.age>=6&&!m.interacted&&!m.pressed;
     const opacity=m.reduced?'1':clamp((m.age-7)/2).toFixed(3);
+    const linkReady=m.reduced||m.age>=9;
     const flowing=!m.reduced&&((m.pressed&&m.held>.45)||m.reservoir>0||m.liquid.moving);
-    const key=[ready,hint,opacity,m.pressed,flowing,m.tension.toFixed(3),m.pullX.toFixed(2),m.pullY.toFixed(2),m.ink.toFixed(3),m.damage.toFixed(3),m.liquid.revision,m.marks].join(':');
+    const key=[ready,hint,opacity,linkReady,m.pressed,flowing,m.tension.toFixed(3),m.pullX.toFixed(2),m.pullY.toFixed(2),m.ink.toFixed(3),m.damage.toFixed(3),m.liquid.revision,m.marks].join(':');
     if(key===this.drawKey)return;
     this.drawKey=key;
     ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,this.canvas.width,this.canvas.height);
@@ -156,6 +158,7 @@ export class WhiteSpace {
     this.target.setAttribute('aria-pressed',String(m.pressed));
     this.hint.hidden=!hint;
     this.signature.style.opacity=opacity;
+    if(this.projectLink)this.projectLink.hidden=!linkReady;
     if(!ready)return;
     const half=Math.min(68,this.width*.12)+m.damage*Math.min(24,this.width*.04)+m.tension*Math.min(84,this.width*.11);
     const gap=3+m.damage*6+m.tension*m.tension*23;
